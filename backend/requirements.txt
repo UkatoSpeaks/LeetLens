@@ -1,0 +1,30 @@
+```txt
+# Web Framework
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+psycopg[binary]
+alembic
+
+# Data Validation & Configuration
+pydantic
+pydantic-settings
+python-dotenv
+
+# Authentication
+python-jose[cryptography]
+passlib[bcrypt]
+
+# HTTP Client
+httpx
+
+# Mistral AI
+mistralai
+
+# Testing
+pytest
+pytest-asyncio
+httpx
+```
