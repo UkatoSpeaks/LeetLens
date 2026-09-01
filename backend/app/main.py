@@ -1,22 +1,26 @@
 from fastapi import FastAPI
 
-app=FastAPI(
+from app.api.auth import router as auth_router
+
+app = FastAPI(
     title="LeetLens API",
     description="AI-powered DSA weakness analyzer",
-    version="0.1.0"
+    version="0.1.0",
 )
+
+app.include_router(auth_router)
 
 
 @app.get("/")
 def root():
-    return{
-        "message":"Welcome to LeetLens API",
-        "status":"running"
+    return {
+        "message": "Welcome to LeetLens API",
+        "status": "running",
     }
 
 
 @app.get("/health")
 def health_check():
-    return{
-        "status":"healthy"
+    return {
+        "status": "healthy",
     }
