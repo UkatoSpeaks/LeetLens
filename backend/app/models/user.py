@@ -1,8 +1,7 @@
 from datetime import datetime
 
 from sqlalchemy import DateTime, String
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.database import Base
 
 
@@ -36,3 +35,9 @@ class User(Base):
         default=datetime.utcnow,
         nullable=False,
     )
+
+
+    submissions: Mapped[list["Submission"]] = relationship(
+    "Submission",
+    back_populates="user",
+)

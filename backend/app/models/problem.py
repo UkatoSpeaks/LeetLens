@@ -52,3 +52,8 @@ class Problem(Base):
         "Topic",
         back_populates="problems",
     )
+
+    submissions: Mapped[list["Submission"]] = relationship(
+    "Submission",
+    back_populates="problem",
+)
