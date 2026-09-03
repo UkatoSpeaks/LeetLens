@@ -71,3 +71,50 @@ class LeetCodeClient:
 
     async def close(self):
         await self.client.aclose()
+
+
+    async def get_user_submissions(
+        self,
+        username: str,
+        limit: int = 20,
+    ) -> list[dict]:
+        query = """
+        query getRecentSubmissions(
+            $username: String!,
+            $limit: Int!
+        ) {
+            recentAcSubmissionList(
+                username: $username,
+                limit: $limit
+            ) {
+                title
+                titleSlug
+                timestamp
+            }
+        }
+        """
+
+        response = await self.client.post(
+            LEETCODE_GRAPHQL_URL,
+            json={
+                "query": query,
+                "variables": {
+                    "username": username,
+                    "limit": limit,
+                },
+            },
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        if data.get("errors"):
+            raise ValueError(
+                f"LeetCode API error: {data['errors']}"
+            )
+
+        return (
+            data.get("data", {})
+            .get("recentAcSubmissionList", [])
+        )
