@@ -69,10 +69,6 @@ class LeetCodeClient:
 
         return user
 
-    async def close(self):
-        await self.client.aclose()
-
-
     async def get_user_submissions(
         self,
         username: str,
@@ -118,3 +114,58 @@ class LeetCodeClient:
             data.get("data", {})
             .get("recentAcSubmissionList", [])
         )
+
+    async def get_problem_metadata(
+        self,
+        title_slug: str,
+    ) -> dict:
+        query = """
+        query getProblem($titleSlug: String!) {
+            question(titleSlug: $titleSlug) {
+                questionId
+                questionFrontendId
+                title
+                titleSlug
+                difficulty
+                isPaidOnly
+                topicTags {
+                    name
+                    slug
+                }
+            }
+        }
+        """
+
+        response = await self.client.post(
+            LEETCODE_GRAPHQL_URL,
+            json={
+                "query": query,
+                "variables": {
+                    "titleSlug": title_slug,
+                },
+            },
+        )
+
+        response.raise_for_status()
+
+        data = response.json()
+
+        if data.get("errors"):
+            raise ValueError(
+                f"LeetCode API error: {data['errors']}"
+            )
+
+        problem = (
+            data.get("data", {})
+            .get("question")
+        )
+
+        if problem is None:
+            raise ValueError(
+                f"LeetCode problem '{title_slug}' not found"
+            )
+
+        return problem
+
+    async def close(self):
+        await self.client.aclose()

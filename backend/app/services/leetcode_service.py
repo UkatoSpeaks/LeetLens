@@ -23,3 +23,17 @@ async def get_leetcode_submissions(
         )
     finally:
         await client.close()
+
+
+async def get_problem_metadata(
+        title_slug:str,
+)-> dict:
+    client= LeetCodeClient()
+
+    try:
+        return await client.get_problem_metadata(
+            title_slug
+        )
+
+    finally:
+        await client.close()

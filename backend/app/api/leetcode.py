@@ -4,6 +4,7 @@ from app.schemas.leetcode import LeetCodeProfileResponse
 from app.services.leetcode_service import (
     get_leetcode_profile,
     get_leetcode_submissions,
+    get_problem_metadata
 )
 
 
@@ -65,6 +66,20 @@ async def leetcode_submissions(
             "count": len(submissions),
             "submissions": submissions,
         }
+
+    except ValueError as error:
+        raise HTTPException(
+            status_code=404,
+            detail=str(error),
+        )
+
+
+@router.get(
+    "/problem/{title_slug}",
+)
+async def leetcode_problem(title_slug: str):
+    try:
+        return await get_problem_metadata(title_slug)
 
     except ValueError as error:
         raise HTTPException(
